@@ -154,7 +154,7 @@ public class FormPanel extends javax.swing.JPanel {
 
                 String outputMessage = "Save successfull";
                 JOptionPane.showMessageDialog(this, outputMessage, "Customer information", HEIGHT);
-                //cleanup();
+                cleanup();
             }
             catch(Exception e)
             {
@@ -173,4 +173,9 @@ public class FormPanel extends javax.swing.JPanel {
     private javax.swing.JTextField nameText;
     private javax.swing.JButton submitButton;
     // End of variables declaration//GEN-END:variables
+    public void cleanup()
+    {
+        nameText.setText("");
+        itemCountText.setText("");
+    }
 }

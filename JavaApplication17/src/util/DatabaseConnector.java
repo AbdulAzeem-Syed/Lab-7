@@ -26,7 +26,7 @@ public class DatabaseConnector {
      */
     public static void addCustomer(Customer customer) {
         //add to database
-        String query = "INSERT INTO CUSTOMER(NAME,ITEMCOUNT) VALUES(?,?)";
+        String query = "INSERT INTO customer(NAME,ITEMCOUNT) VALUES(?,?)";
         try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, customer.getName());
@@ -48,7 +48,7 @@ public class DatabaseConnector {
 //        return list of customers from db
         ArrayList<Customer> customer = new ArrayList<>();
 
-        String query = "SELECT * FROM CUSTOMER";
+        String query = "SELECT * FROM customer";
         try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
@@ -74,7 +74,7 @@ public class DatabaseConnector {
      * 
      */
     public static void deleteCustomer(Customer c) {
-        String query = "delete from CUSTOMER where orderId = ?";
+        String query = "delete from customer where orderId = ?";
 
         try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement stmt = conn.prepareStatement(query);
@@ -91,7 +91,7 @@ public class DatabaseConnector {
      * @param newCustomer modified customer details to be added
      */
     public static void editCustomer(Customer oldCustomer, Customer newCustomer) {
-        String query = "UPDATE CUSTOMER SET name=?, itemCount=? WHERE orderId=?";
+        String query = "UPDATE customer SET name=?, itemCount=? WHERE orderId=?";
 
         try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
             PreparedStatement stmt = conn.prepareStatement(query);

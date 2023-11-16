@@ -4,8 +4,12 @@
  */
 package ui;
 
+import java.util.ArrayList;
 import javax.swing.ButtonModel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import model.Customer;
+import util.DatabaseConnector;
 
 /**
  *
@@ -16,13 +20,26 @@ public class ViewPanel extends javax.swing.JPanel {
     /**
      * Creates new form ViewPanel
      */
+    private ArrayList<Customer> customers;
+    private Customer selectedCustomer;
+    
     public ViewPanel() {
         initComponents();
+        updateTable();
+        cleanup();
         //setPatientData();
     }
-    public ViewPanel(Customer patient) {
-        initComponents();
-        //setPatientData(patient);
+    
+    public int tryParseInt(String value) 
+    {
+        try 
+        {
+            return Integer.parseInt(value);
+        } 
+        catch (NumberFormatException e) 
+        {
+            return -1;
+        }
     }
 
     /**
@@ -35,165 +52,216 @@ public class ViewPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         genderRadioGroup = new javax.swing.ButtonGroup();
-        emailLabel = new javax.swing.JLabel();
-        messageLabel = new javax.swing.JLabel();
-        imageLabel = new javax.swing.JLabel();
         mainTitle = new javax.swing.JLabel();
-        firstNameLabel = new javax.swing.JLabel();
-        lastNameLabel = new javax.swing.JLabel();
-        ageLabel = new javax.swing.JLabel();
-        genderLabel = new javax.swing.JLabel();
-        firstNameText = new javax.swing.JLabel();
-        lastNameText = new javax.swing.JLabel();
-        ageText = new javax.swing.JLabel();
-        emailText = new javax.swing.JLabel();
-        messageText = new javax.swing.JLabel();
-        typeLabel = new javax.swing.JLabel();
-        typeComboBox = new javax.swing.JComboBox<>();
-        maleRadio = new javax.swing.JRadioButton();
-        femaleRadio = new javax.swing.JRadioButton();
-
-        emailLabel.setText("Email :");
-
-        messageLabel.setText("Message :");
-
-        imageLabel.setText("img");
+        jScrollPane1 = new javax.swing.JScrollPane();
+        customersTable = new javax.swing.JTable();
+        nameLabel = new javax.swing.JLabel();
+        nameText = new javax.swing.JTextField();
+        itemCountLabel = new javax.swing.JLabel();
+        itemCountText = new javax.swing.JTextField();
+        submitButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+        editButton = new javax.swing.JButton();
 
         mainTitle.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        mainTitle.setText("Patient Registration");
+        mainTitle.setText("Customers");
 
-        firstNameLabel.setText("First Name :");
+        customersTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Order ID", "Name", "Item Count"
+            }
+        ));
+        jScrollPane1.setViewportView(customersTable);
 
-        lastNameLabel.setText("Last Name :");
+        nameLabel.setText("Name");
 
-        ageLabel.setText("Age :");
+        itemCountLabel.setText("ItemCount");
 
-        genderLabel.setText("Gender :");
+        submitButton.setText("Submit");
+        submitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitButtonActionPerformed(evt);
+            }
+        });
 
-        firstNameText.setText("firstName");
+        deleteButton.setText("Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
 
-        lastNameText.setText("lastName");
-
-        ageText.setText("age");
-
-        emailText.setText("email");
-
-        messageText.setText("message");
-
-        typeLabel.setText("Type :");
-
-        typeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Regular", "Emergency" }));
-
-        genderRadioGroup.add(maleRadio);
-        maleRadio.setText("Male");
-        maleRadio.setActionCommand("MALE");
-
-        genderRadioGroup.add(femaleRadio);
-        femaleRadio.setText("Female");
-        femaleRadio.setActionCommand("FEMALE");
+        editButton.setText("Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(243, 243, 243)
-                .addComponent(mainTitle)
-                .addGap(249, 249, 249))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(55, 55, 55)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(imageLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(243, 243, 243)
+                        .addComponent(mainTitle))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ageLabel)
-                            .addComponent(messageLabel)
-                            .addComponent(firstNameLabel)
-                            .addComponent(lastNameLabel)
-                            .addComponent(emailLabel)
-                            .addComponent(genderLabel)
-                            .addComponent(typeLabel))
-                        .addGap(64, 64, 64)
+                        .addGap(25, 25, 25)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(74, 74, 74)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(maleRadio)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(femaleRadio)))
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(itemCountLabel)
+                                    .addComponent(nameLabel))
+                                .addGap(64, 64, 64)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(nameText)
+                                    .addComponent(itemCountText, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(182, 182, 182)
+                                .addComponent(submitButton)
+                                .addGap(55, 55, 55))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lastNameText)
-                                    .addComponent(ageText)
-                                    .addComponent(emailText)
-                                    .addComponent(messageText)
-                                    .addComponent(firstNameText))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                .addComponent(deleteButton)
+                                .addGap(97, 97, 97)
+                                .addComponent(editButton)))))
+                .addContainerGap(75, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(45, 45, 45)
                 .addComponent(mainTitle)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(firstNameLabel)
-                    .addComponent(firstNameText))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lastNameLabel)
-                    .addComponent(lastNameText))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ageLabel)
-                    .addComponent(ageText))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(emailLabel)
-                    .addComponent(emailText))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(messageLabel)
-                    .addComponent(messageText))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(genderLabel)
-                    .addComponent(maleRadio)
-                    .addComponent(femaleRadio))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(typeLabel)
-                    .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(imageLabel)
-                .addContainerGap(240, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(155, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(deleteButton)
+                            .addComponent(editButton))
+                        .addGap(66, 66, 66)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nameLabel))
+                        .addGap(52, 52, 52)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(itemCountText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(itemCountLabel))
+                        .addGap(64, 64, 64)
+                        .addComponent(submitButton)
+                        .addGap(93, 93, 93))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+        // TODO add your handling code here:
+        boolean hasError = false;
+        StringBuilder errorFields = new StringBuilder();
+        Customer newCustomer = new Customer();
+        
+        try
+        {
+            newCustomer.setName(nameText.getText());
+            newCustomer.setItemCount(tryParseInt(itemCountText.getText()));
+
+            DatabaseConnector.editCustomer(selectedCustomer, newCustomer);
+
+            String outputMessage = "Edit successfull";
+            JOptionPane.showMessageDialog(this, outputMessage, "Customer information", HEIGHT);
+            cleanup();
+            updateTable();
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", HEIGHT);
+        }
+    }//GEN-LAST:event_submitButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        int selectedIndex = customersTable.getSelectedRow();
+        if(selectedIndex == -1)
+        {
+            JOptionPane.showMessageDialog(this, "No user selected", "Error", HEIGHT);
+            return;
+        }
+        try
+        {
+            selectedCustomer = customers.get(selectedIndex);
+            DatabaseConnector.deleteCustomer(selectedCustomer);
+            JOptionPane.showMessageDialog(this, "Delete Successfull", "Error", HEIGHT);
+            cleanup();
+            updateTable();
+        }
+        catch(Exception e)
+        {
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Error", HEIGHT);
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        int selectedIndex = customersTable.getSelectedRow();
+        if(selectedIndex == -1)
+        {
+            JOptionPane.showMessageDialog(this, "No user selected", "Error", HEIGHT);
+            return;
+        }
+        try
+        {
+            selectedCustomer = customers.get(selectedIndex);
+            nameText.setText(selectedCustomer.getName());
+            itemCountText.setText(Integer.toString(selectedCustomer.getItemCount()));
+        }
+        catch(Exception e)
+        {
+                JOptionPane.showMessageDialog(this, e.getMessage(), "Error", HEIGHT);
+        }
+    }//GEN-LAST:event_editButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel ageLabel;
-    private javax.swing.JLabel ageText;
-    private javax.swing.JLabel emailLabel;
-    private javax.swing.JLabel emailText;
-    private javax.swing.JRadioButton femaleRadio;
-    private javax.swing.JLabel firstNameLabel;
-    private javax.swing.JLabel firstNameText;
-    private javax.swing.JLabel genderLabel;
+    private javax.swing.JTable customersTable;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JButton editButton;
     private javax.swing.ButtonGroup genderRadioGroup;
-    private javax.swing.JLabel imageLabel;
-    private javax.swing.JLabel lastNameLabel;
-    private javax.swing.JLabel lastNameText;
+    private javax.swing.JLabel itemCountLabel;
+    private javax.swing.JTextField itemCountText;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel mainTitle;
-    private javax.swing.JRadioButton maleRadio;
-    private javax.swing.JLabel messageLabel;
-    private javax.swing.JLabel messageText;
-    private javax.swing.JComboBox<String> typeComboBox;
-    private javax.swing.JLabel typeLabel;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField nameText;
+    private javax.swing.JButton submitButton;
     // End of variables declaration//GEN-END:variables
-
+    public void updateTable()
+    {
+        this.customers = DatabaseConnector.getAllCustomers();
+        DefaultTableModel model = (DefaultTableModel) customersTable.getModel();
+        model.setRowCount(0);
+        for(Customer c : customers)
+        {
+            Object [] row = new Object[3];
+            row[0] = c.getOrderId();
+            row[1] = c.getName();
+            row[2] = c.getItemCount();
+            model.addRow(row);
+        }
+    }
+    
+    public void cleanup()
+    {
+        nameText.setText("");
+        itemCountText.setText("");
+        selectedCustomer = null;
+    }
 }
