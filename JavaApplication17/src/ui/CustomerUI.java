@@ -4,6 +4,8 @@
  */
 package ui;
 
+import java.awt.CardLayout;
+
 /**
  *
  * @author Abdul
@@ -26,21 +28,85 @@ public class CustomerUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mainSplitPane = new javax.swing.JSplitPane();
+        topPanel = new javax.swing.JPanel();
+        viewFormButton = new javax.swing.JButton();
+        viewDetailsButton = new javax.swing.JButton();
+        bottomPanel = new javax.swing.JPanel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        mainSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        viewFormButton.setText("View Form");
+        viewFormButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewFormButtonActionPerformed(evt);
+            }
+        });
+
+        viewDetailsButton.setText("View Details");
+        viewDetailsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewDetailsButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
+        topPanel.setLayout(topPanelLayout);
+        topPanelLayout.setHorizontalGroup(
+            topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(topPanelLayout.createSequentialGroup()
+                .addGap(88, 88, 88)
+                .addComponent(viewFormButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 297, Short.MAX_VALUE)
+                .addComponent(viewDetailsButton)
+                .addGap(136, 136, 136))
+        );
+        topPanelLayout.setVerticalGroup(
+            topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(topPanelLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(viewFormButton)
+                    .addComponent(viewDetailsButton))
+                .addContainerGap(46, Short.MAX_VALUE))
+        );
+
+        mainSplitPane.setTopComponent(topPanel);
+
+        bottomPanel.setLayout(new java.awt.CardLayout());
+        mainSplitPane.setBottomComponent(bottomPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(mainSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(mainSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void viewFormButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewFormButtonActionPerformed
+        // TODO add your handling code here:
+        FormPanel newFormPanel = new FormPanel(bottomPanel);
+        bottomPanel.add(newFormPanel);
+        CardLayout layout = (CardLayout) bottomPanel.getLayout();
+        layout.next(bottomPanel);
+    }//GEN-LAST:event_viewFormButtonActionPerformed
+
+    private void viewDetailsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDetailsButtonActionPerformed
+        // TODO add your handling code here:
+        ViewPanel newViewPanel = new ViewPanel();
+        bottomPanel.add(newViewPanel);
+        CardLayout layout = (CardLayout) bottomPanel.getLayout();
+        layout.next(bottomPanel);
+    }//GEN-LAST:event_viewDetailsButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +144,10 @@ public class CustomerUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel bottomPanel;
+    private javax.swing.JSplitPane mainSplitPane;
+    private javax.swing.JPanel topPanel;
+    private javax.swing.JButton viewDetailsButton;
+    private javax.swing.JButton viewFormButton;
     // End of variables declaration//GEN-END:variables
 }
